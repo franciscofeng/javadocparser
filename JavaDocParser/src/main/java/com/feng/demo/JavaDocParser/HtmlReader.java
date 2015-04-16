@@ -41,8 +41,7 @@ public class HtmlReader
 				Document versionDoc = doc.clone();
 				htmlReader.removeOtherVersionsMethods(versionDoc, version);
 				System.out.println(versionDoc);
-			}
-			
+			}			
 		}
 	}
 
