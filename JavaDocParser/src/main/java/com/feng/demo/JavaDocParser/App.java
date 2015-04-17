@@ -27,7 +27,6 @@ public class App
 			rootDoc = Jsoup.connect(rootURL).get();
 		} catch (IOException e1)
 		{
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		Elements links = rootDoc.select("a[href]");
@@ -60,18 +59,34 @@ public class App
 		}
 		return true;
 	}
-	private String getFullName(String url)
+	public String getFullName(String url)
 	{
 		return url.replaceAll("/", ".");
 	}
+
 	public static void main(String[] args)
 	{
 		String rootURL = "http://docs.oracle.com/javase/8/docs/api/allclasses-noframe.html";
 		App app = new App();
+		HtmlWriter writer = new HtmlWriter();
+		HtmlReader reader = null;
 		List<String> urls = app.getAllLinks(rootURL);
+		int count = 0;
 		for (String url : urls)
 		{
-			System.out.println(url);
+			if(count >= 10)
+			{
+				break;
+			}
+			System.out.println("handle url "+count+" : "+url);
+			reader = new HtmlReader(url);
+			List<WriteJob> jobs = reader.execute();
+			for(WriteJob job : jobs)
+			{
+				System.out.println(job);
+				writer.write2html(job);
+			}
+			count++;
 		}
 
 	}

@@ -5,9 +5,10 @@ import junit.framework.TestCase;
 public class HtmlReaderTest extends TestCase
 {
 	HtmlReader htmlReader ;
+	String url = "";
 	protected void setUp() throws Exception
 	{
-		htmlReader = new HtmlReader();
+		htmlReader = new HtmlReader(url);
 	}
 
 	protected void tearDown() throws Exception

@@ -8,18 +8,28 @@ import org.apache.commons.io.FileUtils;
 public class HtmlWriter
 {
 	
-	private static String ROOT_DIR = "/Users/feng/dev/javadocs/";
-	public static void main(String[] args)
+	private static String ROOT_DIR;
 	{
-		// TODO Auto-generated method stub
-
+		OS os = getSystemOS();
+		if(os == OS.MAC)
+		{
+			ROOT_DIR = "/Users/feng/dev/javadocs/";
+		}
+		else if(os == OS.WIN)
+		{
+			ROOT_DIR = "d:\\tmp\\javadocs\\";
+		}
 	}
-	public boolean write2html(String content,String packageName,String version)
+	public HtmlWriter()
 	{
-		String fileName = getFileName(packageName, version);
+		
+	}
+	public boolean write2html(WriteJob job)
+	{
+		String fileName = getFileName(job.getPackageName(), job.getVersion());
 		try
 		{
-			FileUtils.write(new File(fileName), content);
+			FileUtils.write(new File(fileName), job.getContent());
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -34,8 +44,26 @@ public class HtmlWriter
 		sb.append(ROOT_DIR);
 		sb.append(version);
 		sb.append(File.separator);
-		sb.append(packageName.replaceAll("\\.", File.separator));
+		sb.append(packageName.replace(".", File.separator));
 		sb.append(".html");
 		return sb.toString();		
 	}
+	
+	public static OS getSystemOS()
+	{
+		String os = System.getProperty("os.name").toLowerCase();
+		if(os.indexOf("win") >= 0)
+		{
+			return OS.WIN;
+		}else if(os.indexOf("mac") >=0)
+		{
+			return OS.MAC;
+		}
+		return OS.MAC;
+	}
+	private enum OS
+	{
+		MAC,WIN;
+	}
 }
+

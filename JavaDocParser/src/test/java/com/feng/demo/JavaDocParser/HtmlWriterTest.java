@@ -25,7 +25,16 @@ public class HtmlWriterTest extends TestCase
 	{
 		String packageName = "java.lang.Test";
 		String version = "1.1";
-		assertEquals("/Users/feng/dev/javadocs/1.1/java/lang/Test.html", writer.getFileName(packageName, version));
+		String os = System.getProperty("os.name").toLowerCase();
+		if(os.indexOf("win") >= 0)
+		{
+			assertEquals("d:\\tmp\\1.1\\java\\lang\\Test.html", writer.getFileName(packageName, version));
+		}
+		else if(os.indexOf("mac") >=0)
+		{
+			assertEquals("/Users/feng/dev/javadocs/1.1/java/lang/Test.html", writer.getFileName(packageName, version));
+		}
+		
 		
 	}
 
