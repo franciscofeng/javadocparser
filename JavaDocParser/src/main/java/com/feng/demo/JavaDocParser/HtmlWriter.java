@@ -44,6 +44,8 @@ public class HtmlWriter
 		sb.append(ROOT_DIR);
 		sb.append(version);
 		sb.append(File.separator);
+		sb.append("api");
+		sb.append(File.separator);
 		sb.append(packageName.replace(".", File.separator));
 		sb.append(".html");
 		return sb.toString();		
@@ -60,6 +62,11 @@ public class HtmlWriter
 			return OS.MAC;
 		}
 		return OS.MAC;
+	}
+	
+	public static String getRootPath()
+	{
+		return ROOT_DIR;
 	}
 	private enum OS
 	{

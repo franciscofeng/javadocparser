@@ -1,5 +1,6 @@
 package com.feng.demo.JavaDocParser;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class App
 	public static String[] USELESS_PACKAGE =
 	{ "java.applet", "java.awt", "javax.swing", "org" };
 
+	public static String RESOURCE_ZIP = "/Users/feng/dev/gitrepos/javadocparser/JavaDocParser/target/classes/api.zip";
+
 	public List<String> getAllLinks(String rootURL)
 	{
 		List<String> urls = new ArrayList<String>();
@@ -34,7 +37,7 @@ public class App
 
 		for (Element e : links)
 		{
-			if(isAvailableURL(e.attr("href")))
+			if (isAvailableURL(e.attr("href")))
 			{
 				urls.add(baseURL + e.attr("href"));
 			}
@@ -50,15 +53,16 @@ public class App
 	private boolean isAvailableURL(String url)
 	{
 		String fullName = getFullName(url);
-		for(String useless:USELESS_PACKAGE)
+		for (String useless : USELESS_PACKAGE)
 		{
-			if(fullName.startsWith(useless))
+			if (fullName.startsWith(useless))
 			{
 				return false;
 			}
 		}
 		return true;
 	}
+
 	public String getFullName(String url)
 	{
 		return url.replaceAll("/", ".");
@@ -74,19 +78,30 @@ public class App
 		int count = 0;
 		for (String url : urls)
 		{
-			if(count >= 10)
+			if (count >= 10)
 			{
 				break;
 			}
-			System.out.println("handle url "+count+" : "+url);
+			System.out.println("handle url " + count + " : " + url);
 			reader = new HtmlReader(url);
 			List<WriteJob> jobs = reader.execute();
-			for(WriteJob job : jobs)
+			for (WriteJob job : jobs)
 			{
 				System.out.println(job);
 				writer.write2html(job);
 			}
 			count++;
+		}
+
+		String rootPath = HtmlWriter.getRootPath();
+		File rootDir = new File(rootPath);
+		File[] versionPaths = rootDir.listFiles();
+		for (File versionPath : versionPaths)
+		{
+			if (versionPath.isDirectory())
+			{
+				ZipUtil.decompress(RESOURCE_ZIP, versionPath.getAbsolutePath());
+			}
 		}
 
 	}
