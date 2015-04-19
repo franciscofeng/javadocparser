@@ -17,7 +17,7 @@ import org.jsoup.select.Elements;
 public class App
 {
 	public static String[] USELESS_PACKAGE =
-	{ "java.applet", "java.awt", "javax.swing", "org" };
+	{ "java.applet", "java.awt", "javax", "org" };
 
 	public static String RESOURCE_ZIP = "/Users/feng/dev/gitrepos/javadocparser/JavaDocParser/target/classes/api.zip";
 
@@ -78,19 +78,20 @@ public class App
 		int count = 0;
 		for (String url : urls)
 		{
-			if (count >= 10)
-			{
-				break;
-			}
+//			if (count >= 10)
+//			{
+//				break;
+//			}
 			System.out.println("handle url " + count + " : " + url);
 			reader = new HtmlReader(url);
 			List<WriteJob> jobs = reader.execute();
 			for (WriteJob job : jobs)
 			{
-				System.out.println(job);
+//				System.out.println(job);
 				writer.write2html(job);
 			}
 			count++;
+			System.out.println("finish "+count+"/"+urls.size());
 		}
 
 		String rootPath = HtmlWriter.getRootPath();

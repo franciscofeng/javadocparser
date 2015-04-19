@@ -23,13 +23,31 @@ public class HtmlReader
 	public List<WriteJob> execute()
 	{
 		List<WriteJob> jobs = new ArrayList<WriteJob>();
-		Document doc = null;
-		try
+		Document doc = getDocumentByURL();
+		if(doc == null)
 		{
-			doc = Jsoup.connect(url).get();
-		} catch (IOException e)
+			try
+			{
+				Thread.sleep(1000);
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		doc = getDocumentByURL();
+		if(doc == null)
 		{
-			e.printStackTrace();
+			try
+			{
+				Thread.sleep(5000);
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		if(doc == null)
+		{
+			return jobs;
 		}
 
 		String defaultVersion = getVersion(doc);
@@ -72,6 +90,20 @@ public class HtmlReader
 			jobs.add(job);
 		}
 		return jobs;
+	}
+
+	public Document getDocumentByURL()
+	{
+		Document doc = null;
+		try
+		{
+			doc = Jsoup.connect(url).get();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		return doc;
 	}
 
 	public String getVersion(Element element)
@@ -135,7 +167,19 @@ public class HtmlReader
 	{
 		if (rawVersion == null || "".equalsIgnoreCase(rawVersion.trim()))
 		{
-			return "";
+			return "unknown";
+		}
+		if(rawVersion.indexOf("1") < 0)
+		{
+			if(rawVersion.length() == 1 && Character.isDigit(rawVersion.charAt(0)))
+			{
+				rawVersion = "1."+rawVersion;
+			}
+			else
+			{
+				return "unknown";
+			}
+
 		}
 		return rawVersion.substring(rawVersion.indexOf("1"),
 				rawVersion.length());
@@ -151,8 +195,8 @@ public class HtmlReader
 			if (isFound)
 			{
 				String version = e.html().trim();
-				versionSet.add(version);
-				System.out.println(" method version is :" + e.html());
+				versionSet.add(formatVersion(version));
+//				System.out.println(" method version is :" + e.html());
 				isFound = false;
 			}
 			if ("Since:".equalsIgnoreCase(e.html().trim()))
@@ -160,11 +204,11 @@ public class HtmlReader
 				isFound = true;
 			}
 		}
-		System.out.println("method version set:");
-		for (String version : versionSet)
-		{
-			System.out.println(version);
-		}
+//		System.out.println("method version set:");
+//		for (String version : versionSet)
+//		{
+//			System.out.println(version);
+//		}
 		return versionSet;
 	}
 
@@ -192,6 +236,15 @@ public class HtmlReader
 	{
 		// String url =
 		// "http://docs.oracle.com/javase/7/docs/api/java/util/Observer.html";
-		String url = "http://docs.oracle.com/javase/8/docs/api/java/util/Locale.html";
+//		String url = "http://docs.oracle.com/javase/8/docs/api/java/util/Locale.html";
+//		String url  = "http://docs.oracle.com/javase/8/docs/api/java/lang/Double.html";
+		String url ="http://docs.oracle.com/javase/8/docs/api/java/beans/Beans.html";
+		HtmlReader reader = new HtmlReader(url);
+		List<WriteJob> jobs = reader.execute();
+		for(WriteJob job:jobs)
+		{
+			System.out.println(job);
+		}
+		
 	}
 }
