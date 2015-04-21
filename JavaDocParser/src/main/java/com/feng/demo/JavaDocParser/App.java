@@ -19,8 +19,6 @@ public class App
 	public static String[] USELESS_PACKAGE =
 	{ "java.applet", "java.awt", "javax", "org" };
 
-	public static String RESOURCE_ZIP = "/Users/feng/dev/gitrepos/javadocparser/JavaDocParser/target/classes/api.zip";
-
 	public List<String> getAllLinks(String rootURL)
 	{
 		List<String> urls = new ArrayList<String>();
@@ -87,21 +85,20 @@ public class App
 			List<WriteJob> jobs = reader.execute();
 			for (WriteJob job : jobs)
 			{
-//				System.out.println(job);
 				writer.write2html(job);
 			}
 			count++;
 			System.out.println("finish "+count+"/"+urls.size());
 		}
 
-		String rootPath = HtmlWriter.getRootPath();
+		String rootPath = Environment.getRootPath();
 		File rootDir = new File(rootPath);
 		File[] versionPaths = rootDir.listFiles();
 		for (File versionPath : versionPaths)
 		{
 			if (versionPath.isDirectory())
 			{
-				ZipUtil.decompress(RESOURCE_ZIP, versionPath.getAbsolutePath());
+				ZipUtil.decompress(Environment.getResourceZip(), versionPath.getAbsolutePath());
 			}
 		}
 

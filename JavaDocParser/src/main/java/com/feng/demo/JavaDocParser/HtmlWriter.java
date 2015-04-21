@@ -7,19 +7,6 @@ import org.apache.commons.io.FileUtils;
 
 public class HtmlWriter
 {
-	
-	private static String ROOT_DIR;
-	{
-		OS os = getSystemOS();
-		if(os == OS.MAC)
-		{
-			ROOT_DIR = "/Users/feng/dev/javadocs/";
-		}
-		else if(os == OS.WIN)
-		{
-			ROOT_DIR = "d:\\tmp\\javadocs\\";
-		}
-	}
 	public HtmlWriter()
 	{
 		
@@ -41,7 +28,7 @@ public class HtmlWriter
 	public String getFileName(String packageName,String version)
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(ROOT_DIR);
+		sb.append(Environment.getRootPath());
 		sb.append(version);
 		sb.append(File.separator);
 		sb.append("api");
@@ -51,26 +38,5 @@ public class HtmlWriter
 		return sb.toString();		
 	}
 	
-	public static OS getSystemOS()
-	{
-		String os = System.getProperty("os.name").toLowerCase();
-		if(os.indexOf("win") >= 0)
-		{
-			return OS.WIN;
-		}else if(os.indexOf("mac") >=0)
-		{
-			return OS.MAC;
-		}
-		return OS.MAC;
-	}
-	
-	public static String getRootPath()
-	{
-		return ROOT_DIR;
-	}
-	private enum OS
-	{
-		MAC,WIN;
-	}
 }
 
