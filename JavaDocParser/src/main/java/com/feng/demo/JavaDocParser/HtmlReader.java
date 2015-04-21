@@ -169,6 +169,7 @@ public class HtmlReader
 		{
 			return "unknown";
 		}
+		rawVersion = rawVersion.replaceAll("[^\\d\\.]*", "");
 		if(rawVersion.indexOf("1") < 0)
 		{
 			if(rawVersion.length() == 1 && Character.isDigit(rawVersion.charAt(0)))
@@ -179,10 +180,14 @@ public class HtmlReader
 			{
 				return "unknown";
 			}
-
 		}
-		return rawVersion.substring(rawVersion.indexOf("1"),
-				rawVersion.length());
+		if(rawVersion.length() > 3 && rawVersion.lastIndexOf(".") != rawVersion.length() -2)
+		{
+			String head = rawVersion.substring(0, rawVersion.length()-1);
+			String tail = rawVersion.substring(rawVersion.length()-1,rawVersion.length());
+			rawVersion = head+"."+tail;
+		}
+		return rawVersion;
 	}
 
 	public Set<String> getMethodVersions(Element methodBlock)
