@@ -90,7 +90,7 @@ public class App
 			count++;
 			System.out.println("finish "+count+"/"+urls.size());
 		}
-
+		// add html resources (css,index etc.)
 		String rootPath = Environment.getRootPath();
 		File rootDir = new File(rootPath);
 		File[] versionPaths = rootDir.listFiles();
@@ -101,6 +101,14 @@ public class App
 				ZipUtil.decompress(Environment.getResourceZip(), versionPath.getAbsolutePath());
 			}
 		}
-
+		//modify index file
+		for(File versionDir : rootDir.listFiles())
+		{
+			if(versionDir.isDirectory())
+			{
+				IndexBuilder builder = new IndexBuilder();
+				builder.execute(versionDir.getAbsolutePath());
+			}
+		}
 	}
 }
